@@ -2,6 +2,7 @@ package com.example.lab3_pi;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -38,12 +39,13 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
         try{
             DataInputStream reader = new DataInputStream(connection.getInputStream());
             stream = new FileOutputStream(file.getPath());
-            byte bufor[] = new byte[10];
-            int downloaded = reader.read(bufor, 0, 10);
+            byte bufor[] = new byte[100];
+            int downloaded = reader.read(bufor, 0, 100);
             while (downloaded != -1) {
                 stream.write(bufor, 0, downloaded);
                 downloadedBytes += downloaded;
-                downloaded = reader.read(bufor, 0, 10);
+                downloaded = reader.read(bufor, 0, 100);
+                Log.d("Pobrano",String.valueOf(downloadedBytes));
             }
         } catch (Exception e) {
             e.printStackTrace();
