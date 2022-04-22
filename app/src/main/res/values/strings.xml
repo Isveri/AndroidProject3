@@ -6,4 +6,5 @@
     <string name="typ_plik">Typ pliku</string>
     <string name="pobierz_plik_btn">Pobierz plik</string>
     <string name="bledy_pob">Pobrano bledow</string>
+    <string name="notification_title">Pobieranie pliku</string>
 </resources>
