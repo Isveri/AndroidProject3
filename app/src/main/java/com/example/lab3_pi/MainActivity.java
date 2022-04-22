@@ -3,12 +3,18 @@ package com.example.lab3_pi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,6 +27,29 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements ZadanieAsynchroniczne.MyCallback {
 
     private String adres_url;
+    private TextView bytes;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            ProgressInfo w = bundle.getParcelable(DownloadActivity.INFO);
+            int downloadedData = w.getDownloadedBytes();
+            bytes = findViewById(R.id.bajty);
+            bytes.setText(String.valueOf(downloadedData));
+        }
+    };
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter((DownloadActivity.NOTIFICATION)));
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+    }
 
 
     @Override
@@ -56,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             }
         });
 
-
     }
 
     @Override
@@ -83,9 +111,7 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
 
     private void askForPermission() throws IOException {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
-            DownloadActivity download = new DownloadActivity(adres_url);
-            download.execute();
-            MyIntentService.startTask(MainActivity.this,1);
+            MyIntentService.startTask(MainActivity.this,adres_url);
 
         }else{
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -94,4 +120,7 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             ActivityCompat.requestPermissions(this,new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
     }
+//    public static Context getContext(){
+//        return getContext();
+//    }
 }

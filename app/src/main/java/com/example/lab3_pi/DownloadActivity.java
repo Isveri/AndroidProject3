@@ -1,16 +1,18 @@
 package com.example.lab3_pi;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.util.Log;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.DataInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
+import java.lang.ref.WeakReference;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -21,9 +23,13 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
     private FileOutputStream stream = null;
     private File file=null;
     private HttpsURLConnection connection;
+    public final static String NOTIFICATION = "com.example.intent_service.odbiornik";
+    public final static String INFO = "info";
+    private Context contextRef;
 
-    public DownloadActivity(String adres){
+    public DownloadActivity(String adres,Context context){
         this.adres = adres;
+        this.contextRef = context;
     }
 
     public void Download() {
@@ -45,6 +51,8 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
                 stream.write(bufor, 0, downloaded);
                 downloadedBytes += downloaded;
                 downloaded = reader.read(bufor, 0, 100);
+                ProgressInfo progress = new ProgressInfo(downloadedBytes,"Pobieranie trwa",connection.getContentLength());
+                sendInfo(progress,contextRef);
                 Log.d("Pobrano",String.valueOf(downloadedBytes));
             }
         } catch (Exception e) {
@@ -65,5 +73,11 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
     protected Integer doInBackground(String... strings) {
         Download();
         return null;
+    }
+
+    private void sendInfo(ProgressInfo info, Context context){
+        Intent intent = new Intent(NOTIFICATION);
+        intent.putExtra(INFO,info);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

@@ -10,11 +10,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+
 
 public class MyIntentService extends IntentService {
 
@@ -24,21 +23,13 @@ public class MyIntentService extends IntentService {
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.intent_service.notification_channel1";
     private NotificationManager notificationManager;
 
-    public static void startTask(Context context, int parameter) {
+    public static void startTask(Context context, String parameter) {
         Intent intent = new Intent(context, MyIntentService.class);
         intent.setAction(action_task1);
         intent.putExtra(parameter1,parameter);
         context.startService(intent);
 
     }
-
-//    /**
-//     * @param name
-//     * @deprecated
-//     */
-//    public MyIntentService(String name) {
-//        super(name);
-//    }
 
     public MyIntentService(){
         super("MyIntentService");
@@ -49,13 +40,12 @@ public class MyIntentService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         prepareNotification();
-//        startForeground(notification_id,createNotification());
         notificationManager.notify(notification_id,createNotification());
 
         if (intent != null) {
             final String action = intent.getAction();
             if (action_task1.equals(action)) {
-                final int param1 = intent.getIntExtra(parameter1,0);
+                final String param1 = intent.getStringExtra(parameter1);
                 doTask(param1);
             }else{
                 Log.e("intent_service","unknown action");
@@ -64,7 +54,9 @@ public class MyIntentService extends IntentService {
         Log.d("intent_service","Task finished successfully");
     }
 
-    private void doTask(int param) {
+    private void doTask(String param) {
+        DownloadActivity download = new DownloadActivity(param,this);
+        download.execute();
 //        notificationManager.notify(notification_id,createNotification());
     }
 
@@ -110,8 +102,8 @@ public class MyIntentService extends IntentService {
     }
 
     private void updateNotification() {
-
         notificationManager.notify(notification_id,createNotification());
     }
+
 
 }

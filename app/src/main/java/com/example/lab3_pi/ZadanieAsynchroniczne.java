@@ -52,6 +52,7 @@ public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
         public void updateTyp(String typ);
 
         public void updateSize(String size);
+
     }
 }
 
