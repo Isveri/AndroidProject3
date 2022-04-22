@@ -43,6 +43,7 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
             s.printStackTrace();
         }
         try{
+            ProgressInfo progress;
             DataInputStream reader = new DataInputStream(connection.getInputStream());
             stream = new FileOutputStream(file.getPath());
             byte bufor[] = new byte[100];
@@ -51,12 +52,17 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
                 stream.write(bufor, 0, downloaded);
                 downloadedBytes += downloaded;
                 downloaded = reader.read(bufor, 0, 100);
-                ProgressInfo progress = new ProgressInfo(downloadedBytes,"Pobieranie trwa",connection.getContentLength());
+                progress = new ProgressInfo(downloadedBytes,"Pobieranie trwa",connection.getContentLength());
                 sendInfo(progress,contextRef);
                 Log.d("Pobrano",String.valueOf(downloadedBytes));
             }
+            progress = new ProgressInfo(downloadedBytes,"Pobieranie zakonczone",connection.getContentLength());
+            sendInfo(progress,contextRef);
+
         } catch (Exception e) {
             e.printStackTrace();
+            ProgressInfo progress = new ProgressInfo(downloadedBytes,"Błąd",connection.getContentLength());
+            sendInfo(progress,contextRef);
         }
         if (stream != null) {
             try {
@@ -80,4 +86,5 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
         intent.putExtra(INFO,info);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
 }

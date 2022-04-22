@@ -18,6 +18,7 @@ import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -28,14 +29,23 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
 
     private String adres_url;
     private TextView bytes;
+    private ProgressBar progressBar;
+    private TextView status;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             ProgressInfo w = bundle.getParcelable(DownloadActivity.INFO);
             int downloadedData = w.getDownloadedBytes();
+            int size = w.getSize();
+            String st = w.getStatus();
             bytes = findViewById(R.id.bajty);
             bytes.setText(String.valueOf(downloadedData));
+            progressBar = findViewById(R.id.progressBar);
+            progressBar.setMax(size);
+            progressBar.setProgress(downloadedData);
+            status = findViewById(R.id.status);
+            status.setText(st);
         }
     };
 
@@ -120,7 +130,5 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             ActivityCompat.requestPermissions(this,new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         }
     }
-//    public static Context getContext(){
-//        return getContext();
-//    }
+
 }

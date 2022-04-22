@@ -57,7 +57,6 @@ public class MyIntentService extends IntentService {
     private void doTask(String param) {
         DownloadActivity download = new DownloadActivity(param,this);
         download.execute();
-//        notificationManager.notify(notification_id,createNotification());
     }
 
     private void prepareNotification(){
@@ -72,31 +71,28 @@ public class MyIntentService extends IntentService {
         }
     }
 
+    int counter = 0;
     private Notification createNotification() {
         Intent intentNotf = new Intent(this, MainActivity.class);
-//        intentNotf.putExtra();
         Log.e("TEST","WORKs");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intentNotf);
-        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+       // PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round)
                             .setContentTitle("Pobieranie pliku")
                             .setContentText("Trwa pobieranie pliku ...")
-//                            .setProgress(100,downloadValue(),false)
-                            //.setContentIntet(waitingIntent)
+                            .setProgress(19200,10,false)
                             .setWhen(System.currentTimeMillis())
                             .setPriority(NotificationCompat.PRIORITY_MAX);
-//        if(downloadValue()!=100){
+//        if(counter!=12900){
 //            notificationBuilder.setOngoing(false);
 //        }else{
 //            notificationBuilder.setOngoing(true);
 //        }
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-//            notificationBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);  /// 1 to id kanalu
-//        }
+
 
         return notificationBuilder.build();
     }

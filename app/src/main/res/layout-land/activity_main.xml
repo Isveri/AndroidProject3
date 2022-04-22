@@ -20,6 +20,7 @@
         android:id="@+id/textInputLayout"
         android:layout_width="316dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="110dp"
         app:layout_constraintBottom_toBottomOf="@+id/adres"
         app:layout_constraintStart_toEndOf="@+id/adres"
         app:layout_constraintTop_toTopOf="@+id/adres">
@@ -27,15 +28,14 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/adresText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/pobierz_inf_btn"
         android:layout_width="361dp"
         android:layout_height="49dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="4dp"
         android:text="@string/pobierz_inff_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,8 +45,8 @@
         android:id="@+id/rozmiar_pliku"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
         android:text="@string/rozmiar_plik"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pobierz_inf_btn" />
@@ -66,7 +66,7 @@
         android:id="@+id/typ_pliku"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="28dp"
         android:text="@string/typ_plik"
         app:layout_constraintStart_toStartOf="parent"
@@ -87,9 +87,10 @@
         android:id="@+id/pobierz_plik_btn"
         android:layout_width="363dp"
         android:layout_height="48dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="12dp"
         android:text="@string/pobierz_plik_btn"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -97,8 +98,8 @@
         android:id="@+id/pobrane_bajty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
         android:text="@string/bledy_pob"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pobierz_plik_btn" />
@@ -107,7 +108,7 @@
         android:id="@+id/bajty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="135dp"
+        android:layout_marginStart="140dp"
         android:text="0"
         app:layout_constraintBottom_toBottomOf="@+id/pobrane_bajty"
         app:layout_constraintStart_toEndOf="@+id/pobrane_bajty"
