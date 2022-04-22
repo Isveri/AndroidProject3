@@ -25,9 +25,10 @@
         app:layout_constraintTop_toTopOf="@+id/adres">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/adresText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="hint" />
+            />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

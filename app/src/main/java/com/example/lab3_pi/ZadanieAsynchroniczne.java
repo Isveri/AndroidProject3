@@ -12,6 +12,12 @@ import javax.net.ssl.HttpsURLConnection;
 public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
     private int rozmiar;
     private String typ;
+    MyCallback callback = null;
+
+    public ZadanieAsynchroniczne(MyCallback callback) {
+        this.callback = callback;
+    }
+
     @Override
     protected Integer doInBackground(String... adres) {
         String adres_url = adres[0];
@@ -21,6 +27,9 @@ public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
             polaczenie = (HttpsURLConnection) url.openConnection();
             rozmiar = polaczenie.getContentLength();
             typ = polaczenie.getContentType();
+
+            callback.updateTyp(typ);
+            callback.updateSize(String.valueOf(rozmiar));
         } catch (Exception e) {
             e.printStackTrace();
         } finally{
@@ -38,4 +47,11 @@ public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
     protected void onPostExecute(Integer result) {
 
     }
+    public interface MyCallback {
+        // Declaration of the template function for the interface
+        public void updateTyp(String typ);
+
+        public void updateSize(String size);
+    }
 }
+
