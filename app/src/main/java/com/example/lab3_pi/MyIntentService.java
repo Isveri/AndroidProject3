@@ -10,14 +10,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 public class MyIntentService extends IntentService {
 
-    private static final String action_task1 = "com.example.intent_service.action.task1";
-    private static final String parameter1 = "com.example.intent_service.extra.parameter1";
-    private static final int notification_id = 1;
+    private static final String action_task1 = "com.example.intent_service.action.task2";
+    private static final String parameter1 = "com.example.intent_service.extra.parameter2";
+    private static final int notification_id = 3;
+    private static final String NOTIFICATION_CHANNEL_ID = "com.example.intent_service.notification_channel1";
     private NotificationManager notificationManager;
 
     public static void startTask(Context context, int parameter) {
@@ -25,25 +29,28 @@ public class MyIntentService extends IntentService {
         intent.setAction(action_task1);
         intent.putExtra(parameter1,parameter);
         context.startService(intent);
+
     }
 
-    /**
-     * @param name
-     * @deprecated
-     */
-    public MyIntentService(String name) {
-        super(name);
-    }
+//    /**
+//     * @param name
+//     * @deprecated
+//     */
+//    public MyIntentService(String name) {
+//        super(name);
+//    }
 
     public MyIntentService(){
-        super("DisplayNotification");
+        super("MyIntentService");
+
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         prepareNotification();
-        startForeground(notification_id,createNotification());
+//        startForeground(notification_id,createNotification());
+        notificationManager.notify(notification_id,createNotification());
 
         if (intent != null) {
             final String action = intent.getAction();
@@ -58,49 +65,53 @@ public class MyIntentService extends IntentService {
     }
 
     private void doTask(int param) {
-        updateNotification();
+//        notificationManager.notify(notification_id,createNotification());
     }
 
     private void prepareNotification(){
-        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             CharSequence name = getString(R.string.app_name);
-            NotificationChannel channel = new NotificationChannel("1",name,NotificationManager.IMPORTANCE_HIGH); /// 1 to id kanalu
-            notificationManager.createNotificationChannel((channel));
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,name,NotificationManager.IMPORTANCE_HIGH); /// 1 to id kanalu
+            channel.setDescription("Pobieranie w toku");
+            channel.setShowBadge(true);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
     private Notification createNotification() {
         Intent intentNotf = new Intent(this, MainActivity.class);
 //        intentNotf.putExtra();
-
+        Log.e("TEST","WORKs");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intentNotf);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Builder notificationBuilder = new Notification.Builder(this);
-        notificationBuilder.setContentTitle(getString(R.string.notification_title))
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round)
+                            .setContentTitle("Pobieranie pliku")
                             .setContentText("Trwa pobieranie pliku ...")
 //                            .setProgress(100,downloadValue(),false)
-//                            .setContentIntet(waitingIntent)
-                            .setSmallIcon(R.drawable.ic_launcher_foreground)
-                            .setChannelId("1");
+                            //.setContentIntet(waitingIntent)
+                            .setWhen(System.currentTimeMillis())
+                            .setPriority(NotificationCompat.PRIORITY_MAX);
 //        if(downloadValue()!=100){
 //            notificationBuilder.setOngoing(false);
 //        }else{
 //            notificationBuilder.setOngoing(true);
 //        }
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            notificationBuilder.setChannelId("1");  /// 1 to id kanalu
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+//            notificationBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);  /// 1 to id kanalu
+//        }
 
         return notificationBuilder.build();
     }
 
     private void updateNotification() {
-        notificationManager.notify(1,createNotification());
+
+        notificationManager.notify(notification_id,createNotification());
     }
 
 }
