@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             progressBar.setProgress(downloadedData);
             status = findViewById(R.id.status);
             status.setText(st);
+
+
         }
     };
 
