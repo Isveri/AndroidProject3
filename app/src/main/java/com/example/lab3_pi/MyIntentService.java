@@ -74,11 +74,14 @@ public class MyIntentService extends IntentService {
     int counter = 0;
     private Notification createNotification() {
         Intent intentNotf = new Intent(this, MainActivity.class);
+        intentNotf.setAction(Intent.ACTION_MAIN);
+        intentNotf.addCategory(Intent.CATEGORY_LAUNCHER);
+        intentNotf.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Log.e("TEST","WORKs");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intentNotf);
-       // PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round)
@@ -86,7 +89,9 @@ public class MyIntentService extends IntentService {
                             .setContentText("Trwa pobieranie pliku ...")
                             .setProgress(19200,10,false)
                             .setWhen(System.currentTimeMillis())
-                            .setPriority(NotificationCompat.PRIORITY_MAX);
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setOngoing(true)
+                            .setContentIntent(pendingIntent);
 //        if(counter!=12900){
 //            notificationBuilder.setOngoing(false);
 //        }else{
