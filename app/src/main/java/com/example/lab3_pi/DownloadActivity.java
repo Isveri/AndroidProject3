@@ -24,11 +24,9 @@ import javax.net.ssl.HttpsURLConnection;
 public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
     private String adres;
     private int downloadedBytes = 0;
-    private static final int notification_id = 3;
     private FileOutputStream stream = null;
     private File file=null;
     private HttpsURLConnection connection;
-    private static final String NOTIFICATION_CHANNEL_ID = "com.example.intent_service.notification_channel1";
     public final static String NOTIFICATION = "com.example.intent_service.odbiornik";
     public final static String INFO = "info";
     private int size;
@@ -56,15 +54,15 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
             ProgressInfo progress;
             DataInputStream reader = new DataInputStream(connection.getInputStream());
             stream = new FileOutputStream(file.getPath());
-            byte bufor[] = new byte[100];
-            int downloaded = reader.read(bufor, 0, 100);
+            byte bufor[] = new byte[10000];
+            int downloaded = reader.read(bufor, 0, 10000);
 
             updateDowloadedData.updateSize(size);
             while (downloaded != -1) {
 
                 stream.write(bufor, 0, downloaded);
                 downloadedBytes += downloaded;
-                downloaded = reader.read(bufor, 0, 100);
+                downloaded = reader.read(bufor, 0, 10000);
                 progress = new ProgressInfo(downloadedBytes,"Pobieranie trwa",size);
                 sendInfo(progress,contextRef);
 

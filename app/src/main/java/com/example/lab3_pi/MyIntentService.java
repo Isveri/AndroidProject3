@@ -21,8 +21,8 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
     private static final String action_task1 = "com.example.intent_service.action.task2";
     private static final String parameter1 = "com.example.intent_service.extra.parameter2";
-    private static final int notification_id = 3;
-    private static final String NOTIFICATION_CHANNEL_ID = "com.example.intent_service.notification_channel1";
+    private static final int notification_id = 4;
+    private static final String NOTIFICATION_CHANNEL_ID = "com.example.intent_service.notification_channel3";
     private NotificationManager notificationManager;
     private NotificationCompat.Builder notificationBuilder;
     private int size;
@@ -71,10 +71,11 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.app_name);
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH); /// 1 to id kanalu
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT); /// 1 to id kanalu
             channel.setDescription("Pobieranie w toku");
             channel.setShowBadge(true);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+            channel.setSound(null,null);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -83,10 +84,10 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
     private Notification createNotification() {
         Intent intentNotf = new Intent(this, MainActivity.class);
-        intentNotf.setAction(Intent.ACTION_MAIN);
+//
         intentNotf.addCategory(Intent.CATEGORY_LAUNCHER);
-        intentNotf.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        Log.e("TEST", "WORKs");
+        intentNotf.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT);
+      //  Log.e("TEST", "WORKs");
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addParentStack(MainActivity.class);
         stackBuilder.addNextIntent(intentNotf);
@@ -101,11 +102,6 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
                 .setOngoing(true)
                 .setContentIntent(pendingIntent);
 
-//        if(counter!=12900){
-//            notificationBuilder.setOngoing(false);
-//        }else{
-//            notificationBuilder.setOngoing(true);
-//        }
 
 
         return notificationBuilder.build();
@@ -129,12 +125,14 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
             } catch (InterruptedException e) {
                 Log.d("TAG", "sleep failure");
             }
+            if(downloadedData==size){
+                notificationBuilder.setContentText("Download completed")
+                        // Removes the progress bar
+                        .setProgress(0, 0, false);
+                notificationManager.notify(notification_id, notificationBuilder.build());
+                break;
+            }
         }
-        // When the loop is finished, updates the notification
-        notificationBuilder.setContentText("Download completed")
-                // Removes the progress bar
-                .setProgress(0, 0, false);
-        notificationManager.notify(notification_id, notificationBuilder.build());
     }
 
 

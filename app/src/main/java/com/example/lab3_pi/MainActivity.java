@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
     private TextView bytes;
     private ProgressBar progressBar;
     private TextView status;
+    private TextView type;
+    private TextView size;
+
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -46,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             progressBar.setProgress(downloadedData);
             status = findViewById(R.id.status);
             status.setText(st);
-
-
         }
     };
 
@@ -71,11 +72,20 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
         TextInputEditText adres = findViewById(R.id.adresText);
         adres.setText("https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.36.tar.xz");
         adres_url = adres.getText().toString();
-//        adres_url = "https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.36.tar.xz";
         Button pobierzInf = findViewById(R.id.pobierz_inf_btn);
         //ZadanieAsynchroniczne zadanie = new ZadanieAsynchroniczne(this);
         Button pobierzPlik = findViewById(R.id.pobierz_plik_btn);
+        type = findViewById(R.id.textView5);
+//        type.setText("0");
+        size = findViewById(R.id.rozmiar);
+//        size.setText("0");
 
+        if(savedInstanceState!=null){
+            String savedOne = savedInstanceState.getString("TYPE");
+            type.setText(savedOne);
+            String savedTwo = savedInstanceState.getString("SIZE");
+            size.setText(savedTwo);
+        }
 
         pobierzInf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,6 +129,13 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
             }
         });
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("SIZE", size.getText().toString());
+        savedInstanceState.putString("TYPE", type.getText().toString());
     }
 
     private void askForPermission() throws IOException {
