@@ -3,6 +3,12 @@ package com.example.lab3_pi;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * Klassa implementująca interfejs Parcelable dzięki której będziemy w stanie
+ * sledzic status pobierania, dzięki implementacji Parcelable jesteśmy w stanie spakować
+ * obiekt tej klasy jako Extra prz wysyłaniu broadcastu
+ */
+
 public class ProgressInfo implements Parcelable {
 
     private int downloadedBytes;

@@ -41,6 +41,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
     }
 
+    /**
+     * Nadpisanie metody obsługującej wykonywanie usługi
+     */
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
@@ -60,6 +63,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
         Log.d("intent_service", "Task finished successfully");
     }
 
+    /**
+     * metoda wykonująca zadanie pobierania i aktualizowania paska postępu
+     */
     private void doTask(String param) {
         DownloadActivity download = new DownloadActivity(param, this,this);
         download.execute();
@@ -67,6 +73,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
     }
 
+    /**
+     * Utworzenie kanału powiadomień
+     */
     private void prepareNotification() {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -82,6 +91,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
 
     int counter = 0;
 
+    /**
+     * tworzenie powiadomienia
+     */
     private Notification createNotification() {
         Intent intentNotf = new Intent(this, MainActivity.class);
 //
@@ -93,6 +105,12 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
         stackBuilder.addNextIntent(intentNotf);
         PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        /**
+         * Ustawienie tutułu i opisu powiadomienia, priorytetu, niektóre chyba ustawienia są niepotrzebne
+         * Pamiętać, że każde powiadomienie jest przypisywane do odpowiedniego wcześniej utworzonego kanału
+         * W przypadku gdy utworzymy kanał z jakims id o priorytecie HIGH to nie możemy tego zmienic bez usuwania kanału
+         * najlepszą opcją jest ustawienie innego id
+         */
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("Pobieranie pliku")
@@ -111,6 +129,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
         notificationManager.notify(notification_id, createNotification());
     }
 
+    /**
+     * Metoda aktualizująca pasek postępu w powiadomieniach.
+     */
     private void progressBar() {
 
         while(downloadedData <= size) {
@@ -135,7 +156,9 @@ public class MyIntentService extends IntentService implements DownloadActivity.u
         }
     }
 
-
+    /**
+     * Nadpisanie metod interfejsu aby przekazac dane do innej klasy
+     */
     @Override
     public void updateBytes(int downloadedBytes) {
         this.downloadedData = downloadedBytes;

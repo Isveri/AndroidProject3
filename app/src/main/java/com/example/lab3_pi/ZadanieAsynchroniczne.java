@@ -18,6 +18,11 @@ public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
         this.callback = callback;
     }
 
+    /**
+     * Metoda działająca w tle ustawiające połączenie, pobierająca rozmiar
+     * i typ pobieranego pliku, ustawia też wartości dla callback zeby potem z nich skorzystac
+     *
+     */
     @Override
     protected Integer doInBackground(String... adres) {
         String adres_url = adres[0];
@@ -47,6 +52,10 @@ public class ZadanieAsynchroniczne extends AsyncTask<String,Integer,Integer> {
     protected void onPostExecute(Integer result) {
 
     }
+
+    /**
+     * interfejs pomagający przekazac dane do głównego widoku
+     */
     public interface MyCallback {
         // Declaration of the template function for the interface
         public void updateTyp(String typ);

@@ -39,6 +39,9 @@ public class DownloadActivity extends AsyncTask<String,Integer,Integer> {
         this.updateDowloadedData = callback;
     }
 
+    /**
+     * Metoda pobierająca plik oraz aktualizująca pasek postepu
+     */
     public void Download() {
         try {
             URL url = new URL(adres);

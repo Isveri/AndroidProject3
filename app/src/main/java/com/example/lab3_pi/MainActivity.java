@@ -34,6 +34,12 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
     private TextView type;
     private TextView size;
 
+    /**
+     * Obiekt klasy BroadcastReceiver oraz nadpisanie metody onRecieve()
+     * W przypadku gdy otrzymany zostanie broadcast pobrane zostaną przekazane dane
+     * oraz ustawione odpowiednie pola na ekranie tj. ilosc pobranych bytow, progress bar
+     * oraz aktualny status
+     */
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -65,6 +71,11 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
     }
 
 
+    /**
+     * ustawienie wszystkich niezbędnych pól, listenerów przycisków itp.
+     * przy tworzeniu widoku.
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +120,11 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
 
     }
 
+    /**
+     *
+     * Nadpisanie metod interfejsu stworzonego w klasie ZadanieAsynchroniczne
+     * w celu ustawienia wartości na ekranie.
+     */
     @Override
     public void updateTyp(String adres) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -131,6 +147,10 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
 
     }
 
+    /**
+     * Metoda onSaveInstanceState dzięki której po przekręceniu ekranu nie znikną informacje
+     * na temat typu i rozmiaru pliku.
+     */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
@@ -138,6 +158,9 @@ public class MainActivity extends AppCompatActivity implements ZadanieAsynchroni
         savedInstanceState.putString("TYPE", type.getText().toString());
     }
 
+    /**
+     * Funkcja pytająca o dostep do storage'a w telefonie
+     */
     private void askForPermission() throws IOException {
         if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
             MyIntentService.startTask(MainActivity.this,adres_url);
